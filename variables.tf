@@ -133,6 +133,18 @@ variable "kubernetes_config_map_ignore_role_changes" {
   description = "Set to `true` to ignore IAM role changes in the Kubernetes Auth ConfigMap"
 }
 
+variable "kubernetes_network_config_enabled" {
+  type        = bool
+  default     = false
+  description = "Set to `true` to enable Cluster Network Configuration"
+}
+
+variable "service_ipv4_cidr" {
+  type        = string
+  default     = null
+  description = "Specify service cidr for network config"
+}
+
 variable "cluster_encryption_config_enabled" {
   type        = bool
   default     = false

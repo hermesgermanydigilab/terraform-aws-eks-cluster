@@ -5,6 +5,10 @@ locals {
     resources        = var.cluster_encryption_config_resources
     provider_key_arn = local.enabled && var.cluster_encryption_config_enabled && var.cluster_encryption_config_kms_key_id == "" ? join("", aws_kms_key.cluster.*.arn) : var.cluster_encryption_config_kms_key_id
   }
+
+  kubernetes_network_config = {
+    service_ipv4_cidr = var.service_ipv4_cidr
+  }
 }
 
 module "label" {
@@ -57,6 +61,13 @@ resource "aws_eks_cluster" "default" {
       provider {
         key_arn = lookup(encryption_config.value, "provider_key_arn")
       }
+    }
+  }
+
+  dynamic "kubernetes_network_config" {
+    for_each = var.kubernetes_network_config_enabled ? [local.kubernetes_network_config] : []
+    content {
+      service_ipv4_cidr = lookup(kubernetes_network_config.value, "service_ipv4_cidr")
     }
   }
 

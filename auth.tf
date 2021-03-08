@@ -62,6 +62,8 @@ resource "null_resource" "wait_for_cluster" {
 data "aws_eks_cluster" "eks" {
   count = local.enabled && var.apply_config_map_aws_auth ? 1 : 0
   name  = join("", aws_eks_cluster.default.*.id)
+
+  depends_on = [aws_eks_cluster.default]
 }
 
 # Get an authentication token to communicate with the EKS cluster.
@@ -72,6 +74,8 @@ data "aws_eks_cluster" "eks" {
 data "aws_eks_cluster_auth" "eks" {
   count = local.enabled && var.apply_config_map_aws_auth ? 1 : 0
   name  = join("", aws_eks_cluster.default.*.id)
+
+  depends_on = [aws_eks_cluster.default]
 }
 
 provider "kubernetes" {
